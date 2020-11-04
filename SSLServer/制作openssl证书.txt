@@ -1,0 +1,17 @@
+1.生成私钥：
+ openssl genrsa -des3 -out server.key 1024 (随便设置密码，需要记住，后续验证)
+2.生成csr文件：
+ openssl req -new -key server.key -out server.csr -config openssl.cfg
+ 输入server.key的验证密码
+ common Name字段必填
+3.生成CA证书:
+ openssl req -new -x509 -keyout ca.key -out ca.crt -config openssl.cfg
+ 输入和server.key的信息一致
+4.CA对server.csr进行签名：
+ openssl ca -in server.csr -out server.crt -cert ca.crt -keyfile ca.key -config openssl.cfg
+ 可能的错误解决：
+		 提示没有目录demoCA\newCerts(新建)
+		 demoCA目录下新建文件:index.txt serial
+		 serial里面填01，保存
+5.转换密钥，不再需要输入密码
+ openssl rsa -in server.key -out server2.key
